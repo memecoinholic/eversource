@@ -1,0 +1,3495 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>EVERSOURCE — $Evercource</title>
+
+<!-- PIXEL FONTS -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+
+<style>
+
+.social-link {
+    position: relative;
+    z-index: 10000;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+    color: #CCFF02;
+    border: 2px solid #000;
+    text-decoration: none;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: .2s;
+}
+
+.social-link:hover {
+    background: #CCFF02;
+    color: #000;
+    transform: translateY(-4px);
+}
+}
+
+.social-x {
+    font-family: Arial, sans-serif;
+    font-size: 21px;
+    font-weight: bold;
+}
+
+.social-telegram {
+    font-family: Arial, sans-serif;
+    font-size: 19px;
+}
+
+/* =========================================
+   EVERSOURCE ENGINE BOOT SCREEN
+   ========================================= */
+
+#engineBoot {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    font-family: 'Press Start 2P', monospace;
+}
+
+/* Background GIF */
+#engineBoot::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("media/first.webp");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    image-rendering: pixelated;
+}
+
+/* Dark overlay supaya UI tetap jelas */
+#engineBoot::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.38);
+}
+
+/* Isi boot screen */
+.engine-content {
+    position: relative;
+    z-index: 2;
+    width: min(600px, 88vw);
+    text-align: center;
+}
+
+/* Judul */
+.engine-title {
+    color: #CCFF02;
+    font-size: clamp(18px, 3vw, 32px);
+    line-height: 1.5;
+    margin-bottom: 30px;
+    text-shadow: 4px 4px 0 #000;
+}
+
+/* Terminal box */
+.engine-terminal {
+    border: 3px solid #CCFF02;
+    background: rgba(0, 0, 0, 0.82);
+    padding: 24px;
+    box-shadow: 8px 8px 0 #000;
+}
+
+/* Tombol */
+#startEngine {
+    width: 100%;
+    min-height: 60px;
+    border: 3px solid #CCFF02;
+    background: #CCFF02;
+    color: #000;
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(11px, 1.6vw, 16px);
+    cursor: pointer;
+    padding: 15px 10px;
+    transition: 0.1s;
+    box-shadow: 6px 6px 0 #000;
+}
+
+#startEngine:hover {
+    transform: translate(3px, 3px);
+    box-shadow: 3px 3px 0 #000;
+}
+
+#startEngine:active {
+    transform: translate(6px, 6px);
+    box-shadow: none;
+}
+
+/* Loading area */
+.engine-loading {
+    display: none;
+}
+
+.engine-status {
+    color: #CCFF02;
+    font-size: 12px;
+    margin-bottom: 18px;
+    line-height: 1.8;
+}
+
+/* Pixel loading bar */
+.engine-bar {
+    width: 100%;
+    height: 28px;
+    border: 3px solid #CCFF02;
+    padding: 3px;
+    background: #000;
+}
+
+.engine-progress {
+    width: 0%;
+    height: 100%;
+    background: #CCFF02;
+    transition: width 0.08s linear;
+}
+
+/* Percentage */
+.engine-percent {
+    color: #CCFF02;
+    font-size: 13px;
+    margin-top: 15px;
+}
+
+/* Fake terminal text */
+.engine-log {
+    margin-top: 18px;
+    color: #CCFF02;
+    font-family: 'VT323', monospace;
+    font-size: 19px;
+    min-height: 25px;
+}
+
+/* =========================================
+   MOBILE BOOT SCREEN
+   ========================================= */
+
+@media (max-width: 700px) {
+
+    #engineBoot::before {
+        background-image: url("media/firstmob.webp");
+    }
+
+    .engine-content {
+        width: 88vw;
+    }
+
+    .engine-terminal {
+        padding: 18px;
+        border-width: 2px;
+        box-shadow: 5px 5px 0 #000;
+    }
+
+    .engine-title {
+        font-size: 17px;
+        margin-bottom: 22px;
+    }
+
+    #startEngine {
+        min-height: 56px;
+        font-size: 10px;
+        line-height: 1.7;
+    }
+
+    .engine-status {
+        font-size: 9px;
+    }
+
+    .engine-percent {
+        font-size: 10px;
+    }
+
+    .engine-log {
+        font-size: 17px;
+    }
+
+}
+
+/* =========================================
+   FLYING BOT
+   ========================================= */
+
+.flybot {
+    position: fixed;
+    top: 8%;
+    right: 5%;
+    width: clamp(90px, 10vw, 150px);
+    z-index: 20;
+    pointer-events: none;
+
+    /* posisi awal */
+    transform: translate3d(0, 0, 0);
+
+    /* animasi mengambang */
+    animation: flybotFloat 3s ease-in-out infinite;
+
+    will-change: transform;
+}
+
+.flybot img {
+    display: block;
+    width: 100%;
+    height: auto;
+    image-rendering: auto;
+    filter: drop-shadow(4px 5px 0 rgba(0, 0, 0, 0.25));
+}
+
+/* Efek floating */
+@keyframes flybotFloat {
+    0% {
+        margin-top: 0px;
+    }
+
+    50% {
+        margin-top: -10px;
+    }
+
+    100% {
+        margin-top: 0px;
+    }
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 700px) {
+
+    .flybot {
+        width: 90px;
+        top: 10%;
+        right: 5%;
+    }
+
+}
+
+
+/* HP kecil */
+@media (max-width: 380px) {
+
+    .flybot {
+        width: 80px;
+        top: 9%;
+        right: 4%;
+    }
+
+}
+
+:root {
+    --acid: #CCFF02;
+    --black: #000000;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    background: #CCFF02;
+}
+
+body {
+    background: #CCFF02;
+    color: #000;
+    font-family: "VT323", monospace;
+    overflow-x: hidden;
+}
+
+
+/* =====================================================
+   FRAME BACKGROUND
+===================================================== */
+
+#frame-background {
+    position: fixed;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    z-index: 0;
+    pointer-events: none;
+
+    background: #CCFF02;
+}
+
+#frameCanvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+
+/* =====================================================
+   CODE RAIN
+===================================================== */
+
+#codeRain {
+    position: fixed;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    z-index: 5;
+    pointer-events: none;
+
+    opacity: .22;
+}
+
+
+/* =====================================================
+   CRT
+===================================================== */
+
+.crt {
+    position: fixed;
+    inset: 0;
+
+    z-index: 50;
+    pointer-events: none;
+
+    opacity: .18;
+
+    background:
+        repeating-linear-gradient(
+            to bottom,
+            rgba(0,0,0,.16) 0px,
+            rgba(0,0,0,.16) 1px,
+            transparent 1px,
+            transparent 4px
+        );
+}
+
+.crt::after {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background:
+        radial-gradient(
+            ellipse at center,
+            transparent 45%,
+            rgba(0,0,0,.35) 100%
+        );
+}
+
+
+/* =====================================================
+   MAIN
+===================================================== */
+
+.site {
+    position: relative;
+    z-index: 10;
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+header {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 68px;
+
+    z-index: 100;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 28px;
+
+    background: #CCFF02;
+
+    border-bottom: 3px solid #000;
+}
+
+.logo {
+    font-family: "Press Start 2P", monospace;
+
+    font-size: 17px;
+
+    letter-spacing: -1px;
+
+    white-space: nowrap;
+}
+
+.logo span {
+    font-size: 9px;
+    margin-left: 8px;
+}
+
+nav {
+    display: flex;
+    gap: 7px;
+}
+
+nav a {
+    color: #000;
+
+    text-decoration: none;
+
+    font-family: "Press Start 2P", monospace;
+
+    font-size: 8px;
+
+    padding: 10px 11px;
+
+    border: 2px solid #000;
+
+    background: #CCFF02;
+
+    transition: .15s;
+}
+
+nav a:hover {
+    background: #000;
+    color: #CCFF02;
+}
+
+
+/* =====================================================
+   SECTION
+===================================================== */
+
+section {
+    width: 100%;
+
+    min-height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 90px 5vw 50px;
+
+    position: relative;
+}
+
+
+/* =====================================================
+   TERMINAL
+===================================================== */
+
+.terminal {
+    width: min(1100px, 92vw);
+
+    border: 3px solid #000;
+
+    background: rgba(204,255,2,.90);
+
+    box-shadow:
+        10px 10px 0 #000;
+
+    padding: 28px;
+
+    position: relative;
+}
+
+.terminal::before {
+    content: "● ● ●";
+
+    position: absolute;
+
+    top: 8px;
+    left: 14px;
+
+    font-family: monospace;
+
+    font-size: 10px;
+}
+
+
+/* =====================================================
+   TERMINAL BAR
+===================================================== */
+
+.terminal-bar {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding:
+        12px 0
+        18px;
+
+    margin-bottom: 25px;
+
+    border-bottom: 2px solid #000;
+
+    font-family: "Press Start 2P", monospace;
+
+    font-size: 8px;
+}
+
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.hero-terminal {
+
+    min-height: 520px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    text-align: center;
+}
+
+.hero-kicker {
+
+    font-size: 23px;
+
+    margin-bottom: 27px;
+}
+
+.hero-title {
+
+    font-family: "Press Start 2P", monospace;
+
+    font-size:
+        clamp(38px, 7vw, 88px);
+
+    line-height: 1;
+
+    margin-bottom: 27px;
+
+    text-shadow:
+        5px 5px 0 #000;
+}
+
+.hero-title span {
+
+    color: #CCFF02;
+
+    background: #000;
+
+    padding: 8px 14px;
+}
+
+.hero-subtitle {
+
+    font-size: 32px;
+
+    margin-bottom: 22px;
+}
+
+.cursor {
+
+    display: inline-block;
+
+    width: 12px;
+    height: 27px;
+
+    background: #000;
+
+    vertical-align: middle;
+
+    animation: blink .7s infinite;
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+
+/* =====================================================
+   CODE TEXT
+===================================================== */
+
+.code-line {
+
+    font-size: 25px;
+
+    line-height: 1.15;
+
+    margin: 4px 0;
+}
+
+.green {
+
+    background: #000;
+
+    color: #CCFF02;
+
+    padding: 2px 6px;
+}
+
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+
+.button-row {
+
+    display: flex;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    margin-top: 10px;
+}
+
+.retro-btn {
+
+    display: inline-block;
+
+    color: #CCFF02;
+
+    background: #000;
+
+    border: 3px solid #000;
+
+    padding: 15px 19px;
+
+    text-decoration: none;
+
+    font-family: "Press Start 2P", monospace;
+
+    font-size: 9px;
+
+    box-shadow:
+        5px 5px 0 rgba(0,0,0,.5);
+
+    transition: .12s;
+}
+
+.retro-btn:hover {
+
+    transform:
+        translate(3px,3px);
+
+    box-shadow:
+        2px 2px 0 rgba(0,0,0,.5);
+}
+
+
+/* =====================================================
+   SECTION TITLE
+===================================================== */
+
+.section-title {
+
+    font-family: "Press Start 2P", monospace;
+
+    font-size:
+        clamp(21px, 4vw, 43px);
+
+    line-height: 1.3;
+
+    margin-bottom: 25px;
+}
+
+.section-title::before {
+    content: "> ";
+}
+
+
+/* =====================================================
+   INFO GRID
+===================================================== */
+
+.info-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 14px;
+}
+
+.info-box {
+
+    border: 2px solid #000;
+
+    padding: 20px;
+
+    background:
+        rgba(204,255,2,.76);
+}
+
+.info-box h3 {
+
+    font-family: "Press Start 2P", monospace;
+
+    font-size: 10px;
+
+    line-height: 1.4;
+
+    margin-bottom: 14px;
+}
+
+.info-box p {
+
+    font-size: 22px;
+
+    line-height: 1.08;
+}
+
+
+/* =====================================================
+   TOKEN
+===================================================== */
+
+.token-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        1.2fr 1fr;
+
+    gap: 20px;
+}
+
+.token-stat {
+
+    border: 3px solid #000;
+
+    padding: 25px;
+
+    background: #000;
+
+    color: #CCFF02;
+}
+
+.token-stat .label {
+
+    font-family: "Press Start 2P", monospace;
+
+    font-size: 9px;
+
+    margin-bottom: 15px;
+}
+
+.token-stat .value {
+
+    font-size: 38px;
+
+    line-height: 1;
+}
+
+
+/* =====================================================
+   HOW TO BUY
+===================================================== */
+
+.steps {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 10px;
+}
+
+.step {
+
+    border: 2px solid #000;
+
+    padding: 20px;
+
+    background:
+        rgba(204,255,2,.8);
+
+    min-height: 205px;
+}
+
+.step-number {
+
+    font-family: "Press Start 2P", monospace;
+
+    font-size: 27px;
+
+    margin-bottom: 24px;
+}
+
+.step h3 {
+
+    font-family: "Press Start 2P", monospace;
+
+    font-size: 9px;
+
+    line-height: 1.4;
+
+    margin-bottom: 13px;
+}
+
+.step p {
+
+    font-size: 21px;
+
+    line-height: 1.08;
+}
+
+
+/* =====================================================
+   ROADMAP
+===================================================== */
+
+.roadmap {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 12px;
+}
+
+.phase {
+
+    border: 3px solid #000;
+
+    padding: 20px;
+
+    min-height: 220px;
+
+    background: #CCFF02;
+}
+
+.phase-number {
+
+    font-family: "Press Start 2P", monospace;
+
+    font-size: 10px;
+
+    margin-bottom: 28px;
+}
+
+.phase h3 {
+
+    font-family: "Press Start 2P", monospace;
+
+    font-size: 10px;
+
+    line-height: 1.4;
+
+    margin-bottom: 13px;
+}
+
+.phase p {
+
+    font-size: 22px;
+
+    line-height: 1.08;
+}
+
+
+/* =====================================================
+   COMMUNITY
+===================================================== */
+
+.community {
+
+    text-align: center;
+}
+
+.big-ticker {
+
+    font-family: "Press Start 2P", monospace;
+
+    font-size:
+        clamp(30px, 7vw, 78px);
+
+    line-height: 1.2;
+
+    margin: 25px 0;
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+footer {
+
+    min-height: 100vh;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 30px;
+
+    text-align: center;
+
+    position: relative;
+
+    z-index: 10;
+}
+
+.footer-terminal {
+
+    width: min(900px, 90vw);
+
+    border: 3px solid #000;
+
+    padding: 50px 25px;
+
+    background:
+        rgba(204,255,2,.90);
+
+    box-shadow:
+        10px 10px 0 #000;
+}
+
+.footer-terminal h2 {
+
+    font-family: "Press Start 2P", monospace;
+
+    font-size:
+        clamp(22px, 5vw, 50px);
+
+    margin-bottom: 25px;
+}
+
+.footer-terminal p {
+
+    font-size: 25px;
+
+    line-height: 1.2;
+}
+
+
+/* =====================================================
+   MUSIC
+===================================================== */
+
+#musicButton {
+
+    position: fixed;
+
+    right: 20px;
+    bottom: 20px;
+
+    z-index: 200;
+
+    width: 55px;
+    height: 55px;
+
+    border: 3px solid #000;
+
+    background: #CCFF02;
+
+    color: #000;
+
+    font-size: 21px;
+
+    cursor: pointer;
+
+    box-shadow:
+        5px 5px 0 #000;
+
+    font-family: monospace;
+}
+
+#musicButton.playing {
+
+    animation:
+        musicPulse .7s infinite alternate;
+}
+
+@keyframes musicPulse {
+
+    from {
+        transform: scale(1);
+    }
+
+    to {
+        transform: scale(1.08);
+    }
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 700px) {
+
+    html,
+    body {
+
+        width: 100%;
+        max-width: 100%;
+
+        overflow-x: hidden;
+    }
+
+
+    /* HEADER */
+
+    header {
+
+        height: 58px;
+
+        padding: 0 9px;
+
+        border-bottom:
+            2px solid #000;
+    }
+
+    .logo {
+
+        font-size: 9px;
+
+        line-height: 1.2;
+    }
+
+    .logo span {
+
+        display: block;
+
+        font-size: 5px;
+
+        margin: 3px 0 0;
+    }
+
+    nav {
+
+        gap: 3px;
+    }
+
+    nav a {
+
+        font-size: 5px;
+
+        padding:
+            7px 6px;
+
+        border-width: 2px;
+    }
+
+    nav a:nth-child(2),
+    nav a:nth-child(3) {
+
+        display: none;
+    }
+
+
+    /* MOBILE FRAME */
+
+    #frame-background {
+
+        width: 100vw;
+        height: 100dvh;
+
+        overflow: hidden;
+    }
+
+    #frameCanvas {
+
+        width: 100vw;
+        height: 100dvh;
+    }
+
+
+    /* EFFECTS */
+
+    #codeRain {
+        opacity: .14;
+    }
+
+    .crt {
+        opacity: .12;
+    }
+
+
+    /* SECTIONS */
+
+    section {
+
+        min-height: 100dvh;
+
+        height: auto;
+
+        padding:
+            76px 10px
+            30px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+    }
+
+
+    /* TERMINAL */
+
+    .terminal {
+
+        width: 100%;
+
+        padding: 14px;
+
+        border-width: 2px;
+
+        box-shadow:
+            5px 5px 0 #000;
+    }
+
+    .terminal::before {
+
+        top: 5px;
+        left: 9px;
+
+        font-size: 6px;
+    }
+
+
+    /* TERMINAL BAR */
+
+    .terminal-bar {
+
+        padding:
+            9px 0
+            11px;
+
+        margin-bottom: 16px;
+
+        font-size: 5px;
+
+        line-height: 1.4;
+    }
+
+
+    /* HERO */
+
+    .hero-terminal {
+
+        min-height: auto;
+
+        padding:
+            8px 0
+            4px;
+    }
+
+    .hero-kicker {
+
+        font-size: 13px;
+
+        line-height: 1.2;
+
+        margin-bottom: 17px;
+    }
+
+    .hero-title {
+
+        font-size:
+            clamp(25px, 9vw, 43px);
+
+        line-height: 1.15;
+
+        letter-spacing: -1px;
+
+        margin-bottom: 18px;
+
+        text-shadow:
+            3px 3px 0 #000;
+    }
+
+    .hero-title span {
+
+        padding:
+            5px 7px;
+    }
+
+    .hero-subtitle {
+
+        font-size: 21px;
+
+        line-height: 1.2;
+
+        margin-bottom: 16px;
+    }
+
+    .cursor {
+
+        width: 7px;
+        height: 18px;
+    }
+
+    .code-line {
+
+        font-size: 18px;
+
+        line-height: 1.12;
+
+        margin: 3px 0;
+    }
+
+
+    /* BUTTONS */
+
+    .button-row {
+
+        width: 100%;
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 6px;
+
+        margin-top: 9px;
+    }
+
+    .retro-btn {
+
+        width: 100%;
+
+        padding:
+            11px 6px;
+
+        font-size: 6px;
+
+        line-height: 1.35;
+
+        border-width: 2px;
+
+        box-shadow:
+            3px 3px 0 rgba(0,0,0,.5);
+    }
+
+
+    /* TITLES */
+
+    .section-title {
+
+        font-size:
+            clamp(15px, 5vw, 21px);
+
+        line-height: 1.35;
+
+        margin-bottom: 15px;
+    }
+
+
+    /* ABOUT */
+
+    .info-grid {
+
+        grid-template-columns: 1fr;
+
+        gap: 6px;
+    }
+
+    .info-box {
+
+        padding: 12px;
+
+        border-width: 2px;
+    }
+
+    .info-box h3 {
+
+        font-size: 7px;
+
+        line-height: 1.4;
+
+        margin-bottom: 6px;
+    }
+
+    .info-box p {
+
+        font-size: 17px;
+
+        line-height: 1.1;
+    }
+
+
+    /* TOKEN */
+
+    .token-grid {
+
+        grid-template-columns: 1fr;
+
+        gap: 7px;
+    }
+
+    .token-stat {
+
+        padding: 13px;
+
+        border-width: 2px;
+    }
+
+    .token-stat .label {
+
+        font-size: 6px;
+
+        margin-bottom: 8px;
+    }
+
+    .token-stat .value {
+
+        font-size: 27px;
+
+        line-height: 1;
+    }
+
+    .token-grid br {
+
+        display: none;
+    }
+
+    .token-grid > div:last-child {
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 6px;
+    }
+
+    .token-grid > div:last-child
+    .info-box {
+
+        min-height: 82px;
+
+        display: flex;
+
+        flex-direction: column;
+
+        justify-content: center;
+    }
+
+
+    /* HOW TO BUY */
+
+    .steps {
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 6px;
+    }
+
+    .step {
+
+        min-height: 145px;
+
+        padding: 11px;
+
+        border-width: 2px;
+    }
+
+    .step-number {
+
+        font-size: 18px;
+
+        margin-bottom: 11px;
+    }
+
+    .step h3 {
+
+        font-size: 7px;
+
+        line-height: 1.35;
+
+        margin-bottom: 8px;
+    }
+
+    .step p {
+
+        font-size: 16px;
+
+        line-height: 1.08;
+    }
+
+
+    /* ROADMAP */
+
+    .roadmap {
+
+        grid-template-columns: 1fr;
+
+        gap: 6px;
+    }
+
+    .phase {
+
+        min-height: auto;
+
+        padding: 12px;
+
+        border-width: 2px;
+    }
+
+    .phase-number {
+
+        font-size: 6px;
+
+        margin-bottom: 8px;
+    }
+
+    .phase h3 {
+
+        font-size: 7px;
+
+        line-height: 1.35;
+
+        margin-bottom: 7px;
+    }
+
+    .phase p {
+
+        font-size: 17px;
+
+        line-height: 1.08;
+    }
+
+
+    /* COMMUNITY */
+
+    .community {
+
+        padding:
+            17px 13px;
+    }
+
+    .community .code-line {
+
+        font-size: 17px;
+    }
+
+    .big-ticker {
+
+        font-size:
+            clamp(20px, 7vw, 33px);
+
+        line-height: 1.2;
+
+        margin: 18px 0;
+    }
+
+    .community .hero-subtitle {
+
+        font-size: 18px;
+
+        margin-bottom: 17px;
+    }
+
+    .community .button-row {
+
+        grid-template-columns: 1fr;
+
+        gap: 5px;
+    }
+
+
+    /* FOOTER */
+
+    footer {
+
+        min-height: 100dvh;
+
+        height: auto;
+
+        padding:
+            30px 10px;
+    }
+
+    .footer-terminal {
+
+        width: 100%;
+
+        padding:
+            35px 13px;
+
+        border-width: 2px;
+
+        box-shadow:
+            5px 5px 0 #000;
+    }
+
+    .footer-terminal h2 {
+
+        font-size:
+            clamp(18px, 7vw, 27px);
+
+        line-height: 1.3;
+
+        margin-bottom: 16px;
+    }
+
+    .footer-terminal p {
+
+        font-size: 19px;
+
+        line-height: 1.15;
+    }
+
+
+    /* MUSIC */
+
+    #musicButton {
+
+        right: 11px;
+        bottom: 11px;
+
+        width: 45px;
+        height: 45px;
+
+        font-size: 17px;
+
+        border-width: 2px;
+
+        box-shadow:
+            3px 3px 0 #000;
+    }
+}
+
+
+/* =====================================================
+   VERY SMALL PHONE
+===================================================== */
+
+@media (max-width: 380px) {
+
+    header {
+        padding: 0 7px;
+    }
+
+    .logo {
+        font-size: 8px;
+    }
+
+    .logo span {
+        font-size: 4px;
+    }
+
+    nav a {
+        font-size: 4px;
+        padding: 6px 5px;
+    }
+
+    section {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    .terminal {
+        padding: 11px;
+    }
+
+    .hero-title {
+        font-size: 24px;
+    }
+
+    .hero-kicker {
+        font-size: 11px;
+    }
+
+    .hero-subtitle {
+        font-size: 18px;
+    }
+
+    .code-line {
+        font-size: 16px;
+    }
+
+    .section-title {
+        font-size: 14px;
+    }
+
+    .info-box p,
+    .phase p {
+        font-size: 15px;
+    }
+
+    .token-grid > div:last-child {
+        grid-template-columns: 1fr;
+    }
+
+    .steps {
+        gap: 5px;
+    }
+
+    .step {
+        min-height: 135px;
+        padding: 9px;
+    }
+
+    .step p {
+        font-size: 14px;
+    }
+
+    .step h3 {
+        font-size: 6px;
+    }
+
+    .big-ticker {
+        font-size: 19px;
+    }
+
+}
+
+.copy-address {
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-style: dashed;
+}
+
+.copy-address:hover {
+    background: #000;
+    color: #CCFF02;
+}
+
+/* NOTIFICATION */
+.copy-notification {
+    position: fixed;
+    left: 50%;
+    bottom: 35px;
+    transform: translateX(-50%) translateY(20px);
+
+    background: #000;
+    color: #CCFF02;
+
+    border: 2px solid #CCFF02;
+
+    padding: 12px 20px;
+
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+
+    opacity: 0;
+    pointer-events: none;
+
+    z-index: 99999;
+
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease;
+}
+
+.copy-notification.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+</style>
+</head>
+
+
+<body>
+
+<!-- =========================================
+     EVERSOURCE ENGINE BOOT SCREEN
+     ========================================= -->
+
+<div id="engineBoot">
+
+    <div class="engine-content">
+
+        <div class="engine-title">
+            EVERSOURCE ENGINE
+        </div>
+
+        <div class="engine-terminal">
+
+            <!-- START BUTTON -->
+            <div id="engineStartScreen">
+
+                <button id="startEngine">
+                    START EVERSOURCE ENGINE
+                </button>
+
+            </div>
+
+            <!-- LOADING SCREEN -->
+            <div class="engine-loading" id="engineLoading">
+
+                <div class="engine-status" id="engineStatus">
+                    INITIALIZING EVERSOURCE...
+                </div>
+
+                <div class="engine-bar">
+                    <div
+                        class="engine-progress"
+                        id="engineProgress">
+                    </div>
+                </div>
+
+                <div class="engine-percent">
+                    <span id="enginePercent">0</span>%
+                </div>
+
+                <div class="engine-log" id="engineLog">
+                    > SYSTEM READY_
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =====================================================
+     FRAME BACKGROUND
+===================================================== -->
+
+<div id="frame-background">
+    <canvas id="frameCanvas"></canvas>
+</div>
+
+
+<!-- =====================================================
+     HACKER CODE RAIN
+===================================================== -->
+
+<canvas id="codeRain"></canvas>
+
+
+<!-- =====================================================
+     CRT
+===================================================== -->
+
+<div class="crt"></div>
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header>
+
+    <div class="logo">
+        EVERSOURCE
+        <span>// SYSTEM ONLINE</span>
+    </div>
+
+    <nav>
+
+        <a href="#home">
+            HOME
+        </a>
+
+        <a href="#about">
+            ABOUT
+        </a>
+
+        <a href="#token">
+            TOKEN
+        </a>
+
+        <a href="#roadmap">
+            ROADMAP
+        </a>
+
+    </nav>
+
+</header>
+
+
+<main class="site">
+
+
+<!-- =====================================================
+     HOME
+===================================================== -->
+
+<section id="home">
+
+    <div class="terminal">
+
+        <div class="terminal-bar">
+
+            <span>
+                EVERSOURCE.EXE
+            </span>
+
+            <span>
+                STATUS: ONLINE
+            </span>
+
+        </div>
+
+
+        <div class="hero-terminal">
+
+            <div class="hero-kicker">
+                ROBINHOOD CHAIN // MEME PROTOCOL
+            </div>
+
+
+            <h1 class="hero-title">
+
+                <span>
+                    EVER
+                </span>SOURCE
+
+            </h1>
+
+
+            <div class="hero-subtitle">
+
+                $Evercource
+
+                <span class="cursor"></span>
+
+            </div>
+
+
+            <p class="code-line">
+                &gt; initializing address engine...
+            </p>
+
+            <p class="code-line">
+                &gt; $Eversource detected.
+            </p>
+
+            <p class="code-line">
+    &gt; <span class="copy-address" id="copyAddress">0x0000000000000000000000000000000</span>.
+</p>
+
+
+            <div class="button-row">
+
+                <a
+                    class="retro-btn"
+                    href="#about"
+                >
+                    ENTER SYSTEM
+                </a>
+
+               <a
+    class="retro-btn"
+    href="https://dexscreener.com"
+    target="_blank"
+    rel="noopener noreferrer"
+>
+    VIEW TOKEN
+</a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     ABOUT
+===================================================== -->
+
+<section id="about">
+
+    <div class="terminal">
+
+        <div class="terminal-bar">
+
+            <span>
+                ABOUT.ROM
+            </span>
+
+            <span>
+                READ_ONLY
+            </span>
+
+        </div>
+
+
+        <h2 class="section-title">
+            WHAT IS EVERSOURCE?
+        </h2>
+
+
+        <div class="info-grid">
+
+
+            <div class="info-box">
+
+                <h3>
+                    01 // THE SOURCE
+                </h3>
+
+                <p>
+                    EVERSOURCE is a community-driven
+                    memecoin built for the culture,
+                    the memes and the chaos of the
+                    Robinhood Chain.
+                </p>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <h3>
+                    02 // THE MISSION
+                </h3>
+
+                <p>
+                    Keep the source alive.
+                    Keep the memes flowing.
+                    Keep building until the
+                    terminal never shuts down.
+                </p>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <h3>
+                    03 // THE CULTURE
+                </h3>
+
+                <p>
+                    No corporate presentation.
+                    No complicated lore.
+                    Just internet culture,
+                    pixels and $Evercource.
+                </p>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <h3>
+                    04 // SYSTEM STATUS
+                </h3>
+
+                <p>
+
+                    NETWORK:
+
+                    <span class="green">
+                        ROBINHOOD CHAIN
+                    </span>
+
+                    <br><br>
+
+                    SOURCE:
+
+                    <span class="green">
+                        EVERSOURCE
+                    </span>
+
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     TOKEN
+===================================================== -->
+
+<section id="token">
+
+    <div class="terminal">
+
+        <div class="terminal-bar">
+
+            <span>
+                TOKEN.CFG
+            </span>
+
+            <span>
+                LIVE_DATA
+            </span>
+
+        </div>
+
+
+        <h2 class="section-title">
+            TOKEN TERMINAL
+        </h2>
+
+
+        <div class="token-grid">
+
+
+            <div>
+
+                <div class="token-stat">
+
+                    <div class="label">
+                        TOKEN NAME
+                    </div>
+
+                    <div class="value">
+                        EVERSOURCE
+                    </div>
+
+                </div>
+
+
+                <br>
+
+
+                <div class="token-stat">
+
+                    <div class="label">
+                        TICKER
+                    </div>
+
+                    <div class="value">
+                        $Evercource
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <div class="info-box">
+
+                    <h3>
+                        NETWORK
+                    </h3>
+
+                    <p>
+                        ROBINHOOD CHAIN
+                    </p>
+
+                </div>
+
+
+                <br>
+
+
+                <div class="info-box">
+
+                    <h3>
+                        TYPE
+                    </h3>
+
+                    <p>
+                        COMMUNITY MEMECOIN
+                    </p>
+
+                </div>
+
+
+                <br>
+
+
+                <div class="info-box">
+
+                    <h3>
+                        PROTOCOL
+                    </h3>
+
+                    <p>
+                        INTERNET CULTURE
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     HOW TO BUY
+===================================================== -->
+
+<section id="buy">
+
+    <div class="terminal">
+
+        <div class="terminal-bar">
+
+            <span>
+                BUY.PROTOCOL
+            </span>
+
+            <span>
+                4 STEPS
+            </span>
+
+        </div>
+
+
+        <h2 class="section-title">
+            HOW TO GET $Evercource
+        </h2>
+
+
+        <div class="steps">
+
+
+            <div class="step">
+
+                <div class="step-number">
+                    01
+                </div>
+
+                <h3>
+                    GET WALLET
+                </h3>
+
+                <p>
+                    Prepare a compatible
+                    Robinhood Chain wallet.
+                </p>
+
+            </div>
+
+
+            <div class="step">
+
+                <div class="step-number">
+                    02
+                </div>
+
+                <h3>
+                    GET FUNDS
+                </h3>
+
+                <p>
+                    Fund your wallet
+                    with the required
+                    network asset.
+                </p>
+
+            </div>
+
+
+            <div class="step">
+
+                <div class="step-number">
+                    03
+                </div>
+
+                <h3>
+                    FIND TOKEN
+                </h3>
+
+                <p>
+                    Copy $Eversource CA above, and paste it where ever you want.
+                </p>
+
+            </div>
+
+
+            <div class="step">
+
+                <div class="step-number">
+                    04
+                </div>
+
+                <h3>
+                    JOIN SOURCE
+                </h3>
+
+                <p>
+                    Swap, hold,
+                    meme and join
+                    the community.
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     ROADMAP
+===================================================== -->
+
+<section id="roadmap">
+
+    <div class="terminal">
+
+        <div class="terminal-bar">
+
+            <span>
+                ROADMAP.ROM
+            </span>
+
+            <span>
+                LOADING...
+            </span>
+
+        </div>
+
+
+        <h2 class="section-title">
+            SYSTEM ROADMAP
+        </h2>
+
+
+        <div class="roadmap">
+
+
+            <div class="phase">
+
+                <div class="phase-number">
+                    PHASE_01
+                </div>
+
+                <h3>
+                    SOURCE ONLINE
+                </h3>
+
+                <p>
+                    Launch EVERSOURCE.
+                    Build the first layer
+                    of the community.
+                </p>
+
+            </div>
+
+
+            <div class="phase">
+
+                <div class="phase-number">
+                    PHASE_02
+                </div>
+
+                <h3>
+                    MEME EXPANSION
+                </h3>
+
+                <p>
+                    More memes.
+                    More content.
+                    More source.
+                </p>
+
+            </div>
+
+
+            <div class="phase">
+
+                <div class="phase-number">
+                    PHASE_03
+                </div>
+
+                <h3>
+                    NETWORK EFFECT
+                </h3>
+
+                <p>
+                    Grow the community
+                    and make EVERSOURCE
+                    impossible to ignore.
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     COMMUNITY
+===================================================== -->
+
+<section id="community">
+
+    <div class="terminal community">
+
+        <div class="terminal-bar">
+
+            <span>
+                COMMUNITY.SYS
+            </span>
+
+            <span>
+                CONNECTED
+            </span>
+
+        </div>
+
+
+        <p class="code-line">
+            &gt; CONNECTION ESTABLISHED
+        </p>
+
+
+        <div class="big-ticker">
+            $Eversource
+        </div>
+
+
+        <p class="hero-subtitle">
+            THE SOURCE NEVER ENDS.
+        </p>
+
+
+        <div class="button-row">
+
+    <a
+        href="https://x.com/eversourcecoin"
+        class="retro-btn"
+        target="_blank"
+        rel="noopener noreferrer"
+    >
+        X / TWITTER
+    </a>
+
+    <a
+        href="https://t.me/eversourcecoin"
+        class="retro-btn"
+        target="_blank"
+        rel="noopener noreferrer"
+    >
+        TELEGRAM
+    </a>
+
+    <a
+        href="https://www.ponsfamily.com/launchpad"
+        class="retro-btn"
+        target="_blank"
+        rel="noopener noreferrer"
+    >
+        BUY TOKEN
+    </a>
+
+</div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+    <div class="footer-terminal">
+
+        <h2>
+            EVERSOURCE
+        </h2>
+
+        <p>
+            $Evercource // ROBINHOOD CHAIN
+        </p>
+
+        <br>
+
+        <p>
+            [ SYSTEM STILL RUNNING ]
+        </p>
+
+        <br>
+
+        <p>
+            © 2026 EVERSOURCE
+        </p>
+
+    </div>
+
+</footer>
+
+
+</main>
+
+
+
+<!-- =====================================================
+     MUSIC
+===================================================== -->
+
+<audio
+    id="backgroundMusic"
+    src="media/music.mp3"
+    loop
+    preload="auto">
+</audio>
+
+
+<button id="musicButton">
+    ♪
+</button>
+
+
+
+<script>
+
+/* =====================================================
+   FRAME-BY-FRAME SCROLL ENGINE
+===================================================== */
+
+const canvas =
+    document.getElementById("frameCanvas");
+
+const ctx =
+    canvas.getContext("2d");
+
+
+const TOTAL_FRAMES = 99;
+
+let images = [];
+
+let currentFrame = 0;
+
+
+/*
+   IMPORTANT:
+
+   DESKTOP:
+   frames/frame_001.webp
+
+   MOBILE:
+   mobfiles/frame_001.webp
+
+   Filename is IDENTICAL.
+   Only folder changes.
+*/
+
+let isMobile =
+    window.matchMedia(
+        "(max-width: 700px)"
+    ).matches;
+
+
+let folder =
+    isMobile
+        ? "mobfiles/"
+        : "frames/";
+
+
+/* =====================================================
+   CANVAS SIZE
+===================================================== */
+
+function resizeCanvas() {
+
+    const dpr =
+        Math.min(
+            window.devicePixelRatio || 1,
+            2
+        );
+
+
+    canvas.width =
+        window.innerWidth * dpr;
+
+    canvas.height =
+        window.innerHeight * dpr;
+
+
+    canvas.style.width =
+        window.innerWidth + "px";
+
+    canvas.style.height =
+        window.innerHeight + "px";
+
+
+    ctx.setTransform(
+        dpr,
+        0,
+        0,
+        dpr,
+        0,
+        0
+    );
+
+
+    drawFrame(currentFrame);
+}
+
+
+/* =====================================================
+   LOAD FRAME IMAGES
+===================================================== */
+
+function loadFrames() {
+
+    images = [];
+
+    let loaded = 0;
+
+
+    for (
+        let i = 1;
+        i <= TOTAL_FRAMES;
+        i++
+    ) {
+
+        const img =
+            new Image();
+
+
+        /*
+           SAME FILENAME
+           DIFFERENT FOLDER
+        */
+
+        const number =
+            String(i).padStart(3, "0");
+
+
+        img.src =
+            `${folder}frame_${number}.webp`;
+
+
+        img.onload = () => {
+
+            loaded++;
+
+
+            if (
+                loaded === 1
+            ) {
+
+                drawFrame(0);
+
+            }
+
+        };
+
+
+        images[i - 1] =
+            img;
+    }
+}
+
+
+/* =====================================================
+   DRAW FRAME
+===================================================== */
+
+function drawFrame(index) {
+
+    const img =
+        images[index];
+
+
+    if (
+        !img ||
+        !img.complete ||
+        !img.naturalWidth
+    ) {
+
+        return;
+    }
+
+
+    const cw =
+        window.innerWidth;
+
+    const ch =
+        window.innerHeight;
+
+
+    const iw =
+        img.naturalWidth;
+
+    const ih =
+        img.naturalHeight;
+
+
+    /*
+       COVER
+
+       Frame fills the entire screen.
+    */
+
+    const scale =
+        Math.max(
+            cw / iw,
+            ch / ih
+        );
+
+
+    const width =
+        iw * scale;
+
+    const height =
+        ih * scale;
+
+
+    const x =
+        (cw - width) / 2;
+
+    const y =
+        (ch - height) / 2;
+
+
+    ctx.clearRect(
+        0,
+        0,
+        cw,
+        ch
+    );
+
+
+    ctx.drawImage(
+        img,
+        x,
+        y,
+        width,
+        height
+    );
+}
+
+
+/* =====================================================
+   SCROLL → FRAME
+===================================================== */
+
+function updateFrame() {
+
+    const scrollTop =
+        window.scrollY;
+
+
+    const maxScroll =
+        document.documentElement.scrollHeight -
+        window.innerHeight;
+
+
+    if (
+        maxScroll <= 0
+    ) {
+
+        return;
+    }
+
+
+    const progress =
+        scrollTop / maxScroll;
+
+
+    const frame =
+        Math.min(
+            TOTAL_FRAMES - 1,
+            Math.floor(
+                progress *
+                (TOTAL_FRAMES - 1)
+            )
+        );
+
+
+    if (
+        frame !== currentFrame
+    ) {
+
+        currentFrame =
+            frame;
+
+
+        requestAnimationFrame(
+            () => {
+
+                drawFrame(
+                    currentFrame
+                );
+
+            }
+        );
+
+    }
+}
+
+
+/* =====================================================
+   SCROLL EVENT
+===================================================== */
+
+let scrollTicking =
+    false;
+
+
+window.addEventListener(
+    "scroll",
+    () => {
+
+        if (
+            !scrollTicking
+        ) {
+
+            requestAnimationFrame(
+                () => {
+
+                    updateFrame();
+
+                    scrollTicking =
+                        false;
+
+                }
+            );
+
+
+            scrollTicking =
+                true;
+        }
+
+    },
+    {
+        passive: true
+    }
+);
+
+
+/* =====================================================
+   DESKTOP ↔ MOBILE
+===================================================== */
+
+window.addEventListener(
+    "resize",
+    () => {
+
+        const newMobile =
+            window.matchMedia(
+                "(max-width: 700px)"
+            ).matches;
+
+
+        /*
+           If device mode changes,
+           reload frames from the
+           correct folder.
+        */
+
+        if (
+            newMobile !== isMobile
+        ) {
+
+            isMobile =
+                newMobile;
+
+
+            folder =
+                isMobile
+                    ? "mobfiles/"
+                    : "frames/";
+
+
+            loadFrames();
+
+        }
+
+
+        resizeCanvas();
+
+    }
+);
+
+
+/* =====================================================
+   INITIALIZE FRAME SYSTEM
+===================================================== */
+
+resizeCanvas();
+
+loadFrames();
+
+
+
+/* =====================================================
+   HACKER CODE RAIN
+===================================================== */
+
+const rainCanvas =
+    document.getElementById(
+        "codeRain"
+    );
+
+
+const rainCtx =
+    rainCanvas.getContext(
+        "2d"
+    );
+
+
+let rainWidth =
+    window.innerWidth;
+
+let rainHeight =
+    window.innerHeight;
+
+
+const fontSize = 14;
+
+
+const characters =
+    "01ABCDEFGHIJKLMNOPQRSTUVWXYZ{}[]<>/\\\\#$%&@EVERSOURCE";
+
+
+let columns;
+
+let drops;
+
+
+function resizeRain() {
+
+    const dpr =
+        Math.min(
+            window.devicePixelRatio || 1,
+            2
+        );
+
+
+    rainWidth =
+        window.innerWidth;
+
+    rainHeight =
+        window.innerHeight;
+
+
+    rainCanvas.width =
+        rainWidth * dpr;
+
+    rainCanvas.height =
+        rainHeight * dpr;
+
+
+    rainCanvas.style.width =
+        rainWidth + "px";
+
+    rainCanvas.style.height =
+        rainHeight + "px";
+
+
+    rainCtx.setTransform(
+        dpr,
+        0,
+        0,
+        dpr,
+        0,
+        0
+    );
+
+
+    columns =
+        Math.floor(
+            rainWidth /
+            fontSize
+        );
+
+
+    drops = [];
+
+
+    for (
+        let i = 0;
+        i < columns;
+        i++
+    ) {
+
+        drops[i] =
+            Math.random() * -100;
+
+    }
+
+}
+
+
+function drawRain() {
+
+    rainCtx.fillStyle =
+        "rgba(204,255,2,0.045)";
+
+
+    rainCtx.fillRect(
+        0,
+        0,
+        rainWidth,
+        rainHeight
+    );
+
+
+    rainCtx.fillStyle =
+        "#000000";
+
+
+    rainCtx.font =
+        fontSize +
+        "px monospace";
+
+
+    for (
+        let i = 0;
+        i < drops.length;
+        i++
+    ) {
+
+        const char =
+            characters[
+                Math.floor(
+                    Math.random() *
+                    characters.length
+                )
+            ];
+
+
+        const x =
+            i * fontSize;
+
+
+        const y =
+            drops[i] *
+            fontSize;
+
+
+        rainCtx.fillText(
+            char,
+            x,
+            y
+        );
+
+
+        if (
+            y > rainHeight &&
+            Math.random() > .975
+        ) {
+
+            drops[i] = 0;
+
+        }
+
+
+        drops[i] +=
+            Math.random() *
+            .8 + .3;
+
+    }
+
+
+    requestAnimationFrame(
+        drawRain
+    );
+}
+
+
+resizeRain();
+
+drawRain();
+
+
+window.addEventListener(
+    "resize",
+    resizeRain
+);
+
+
+
+/* =====================================================
+   MUSIC
+===================================================== */
+
+const music =
+    document.getElementById(
+        "backgroundMusic"
+    );
+
+
+const musicButton =
+    document.getElementById(
+        "musicButton"
+    );
+
+
+let musicPlaying =
+    false;
+
+
+music.volume =
+    0.35;
+
+
+/*
+   Browser may block
+   autoplay with sound.
+*/
+
+window.addEventListener(
+    "load",
+    () => {
+
+        music.play()
+            .then(
+                () => {
+
+                    musicPlaying =
+                        true;
+
+                    musicButton
+                        .classList
+                        .add(
+                            "playing"
+                        );
+
+                    musicButton.innerHTML =
+                        "♫";
+
+                }
+            )
+            .catch(
+                () => {
+
+                    musicPlaying =
+                        false;
+
+                }
+            );
+
+    }
+);
+
+
+/* =====================================================
+   MUSIC BUTTON
+===================================================== */
+
+musicButton.addEventListener(
+    "click",
+    () => {
+
+        if (
+            musicPlaying
+        ) {
+
+            music.pause();
+
+            musicPlaying =
+                false;
+
+
+            musicButton
+                .classList
+                .remove(
+                    "playing"
+                );
+
+
+            musicButton.innerHTML =
+                "♪";
+
+        }
+
+        else {
+
+            music.play();
+
+            musicPlaying =
+                true;
+
+
+            musicButton
+                .classList
+                .add(
+                    "playing"
+                );
+
+
+            musicButton.innerHTML =
+                "♫";
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   SPACEBAR MUSIC
+===================================================== */
+
+document.addEventListener(
+    "keydown",
+    (event) => {
+
+        if (
+            event.code === "Space" &&
+            event.target === document.body
+        ) {
+
+            event.preventDefault();
+
+            musicButton.click();
+
+        }
+
+    }
+);
+
+</script>
+<!-- FLYING BOT -->
+<div class="flybot">
+    <img src="images/flybot.png" alt="Flying Bot">
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    const flybot = document.querySelector(".flybot");
+
+    if (!flybot) return;
+
+    function updateFlybot() {
+
+        const scrollTop = window.scrollY;
+
+        const maxScroll =
+            document.documentElement.scrollHeight - window.innerHeight;
+
+        // Progress scroll dari 0 sampai 1
+        const progress = maxScroll > 0
+            ? Math.min(1, Math.max(0, scrollTop / maxScroll))
+            : 0;
+
+        /*
+         * Posisi:
+         *
+         * Awal  = kanan atas
+         * Akhir = kiri bawah
+         */
+
+        const startX = 0;
+        const endX = -1;
+
+        const startY = 0;
+        const endY = 1;
+
+        /*
+         * Jarak perpindahan berdasarkan ukuran viewport
+         */
+
+        const moveX = window.innerWidth * 0.80;
+        const moveY = window.innerHeight * 0.70;
+
+        const x = progress * -moveX;
+        const y = progress * moveY;
+
+        flybot.style.transform =
+            `translate3d(${x}px, ${y}px, 0)`;
+    }
+
+    window.addEventListener("scroll", updateFlybot, {
+        passive: true
+    });
+
+    window.addEventListener("resize", updateFlybot);
+
+    updateFlybot();
+
+});
+
+
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const bootScreen = document.getElementById("engineBoot");
+    const startButton = document.getElementById("startEngine");
+    const startScreen = document.getElementById("engineStartScreen");
+    const loadingScreen = document.getElementById("engineLoading");
+
+    const progressBar = document.getElementById("engineProgress");
+    const percentText = document.getElementById("enginePercent");
+    const statusText = document.getElementById("engineStatus");
+    const logText = document.getElementById("engineLog");
+
+    const music = document.getElementById("backgroundMusic");
+
+    if (!bootScreen || !startButton) {
+        console.error("EVERSOURCE Boot Screen tidak ditemukan.");
+        return;
+    }
+
+    startButton.addEventListener("click", function () {
+
+        /* =========================
+           PLAY MUSIC
+        ========================= */
+
+        if (music) {
+            music.volume = 0.7;
+
+            music.play().catch(function (error) {
+                console.log("Music error:", error);
+            });
+        }
+
+
+        /* =========================
+           TAMPILKAN LOADING
+        ========================= */
+
+        startScreen.style.display = "none";
+        loadingScreen.style.display = "block";
+
+
+        /* =========================
+           LOADING
+        ========================= */
+
+        let progress = 0;
+
+        const loadingMessages = [
+            "INITIALIZING EVERSOURCE...",
+            "LOADING CORE SYSTEM...",
+            "CONNECTING ROBINHOOD CHAIN...",
+            "CALIBRATING FLIGHT MODULE...",
+            "LOADING MEMORY BLOCKS...",
+            "VERIFYING ENGINE...",
+            "STARTING EVERSOURCE CORE...",
+            "SYSTEM ONLINE."
+        ];
+
+        let messageIndex = 0;
+
+        const loading = setInterval(function () {
+
+            progress += Math.floor(Math.random() * 4) + 1;
+
+            if (progress >= 100) {
+                progress = 100;
+            }
+
+            /* Progress bar */
+            progressBar.style.width = progress + "%";
+
+            /* Percentage */
+            percentText.textContent = progress;
+
+
+            /* Text loading */
+            const newMessageIndex = Math.min(
+                loadingMessages.length - 1,
+                Math.floor(progress / 13)
+            );
+
+            if (newMessageIndex !== messageIndex) {
+
+                messageIndex = newMessageIndex;
+
+                statusText.textContent =
+                    loadingMessages[messageIndex];
+
+                logText.textContent =
+                    "> " + loadingMessages[messageIndex] + "_";
+            }
+
+
+            /* =========================
+               SELESAI
+            ========================= */
+
+            if (progress >= 100) {
+
+                clearInterval(loading);
+
+                statusText.textContent =
+                    "EVERSOURCE ENGINE ONLINE";
+
+                logText.textContent =
+                    "> SYSTEM READY // WELCOME_";
+
+
+                setTimeout(function () {
+
+                    /*
+                     * Hilangkan boot screen
+                     */
+
+                    bootScreen.style.opacity = "0";
+
+                    bootScreen.style.pointerEvents = "none";
+
+
+                    /*
+                     * Setelah fade selesai,
+                     * BENAR-BENAR sembunyikan
+                     */
+
+                    setTimeout(function () {
+
+                        bootScreen.style.display = "none";
+
+                        /*
+                         * Paksa halaman kembali
+                         * ke section pertama
+                         */
+
+                        window.scrollTo(0, 0);
+
+                        document.documentElement.scrollTop = 0;
+                        document.body.scrollTop = 0;
+
+                    }, 600);
+
+                }, 700);
+            }
+
+        }, 80);
+
+    });
+
+});
+</script>
+<!-- SOCIAL LINKS -->
+<div class="social-bottom">
+
+    <a class="social-link"
+       href="https://x.com/eversourcecoin"
+       target="_blank"
+       rel="noopener noreferrer">
+        <span class="social-x">𝕏</span>
+    </a>
+
+    <a class="social-link"
+       href="https://t.me/eversourcecoin"
+       target="_blank"
+       rel="noopener noreferrer">
+        <span class="social-telegram">⌲</span>
+    </a>
+
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const address = document.getElementById("copyAddress");
+
+    if (!address) return;
+
+    /* Buat notification */
+    const notification = document.createElement("div");
+
+    notification.className = "copy-notification";
+    notification.textContent = "Address copied";
+
+    document.body.appendChild(notification);
+
+
+    address.addEventListener("click", function (event) {
+
+        /* Mencegah script navigasi website menangkap klik */
+        event.preventDefault();
+        event.stopPropagation();
+
+        const text = address.textContent.trim();
+
+
+        /* Copy address */
+        navigator.clipboard.writeText(text)
+            .then(function () {
+
+                /* Tampilkan notif */
+                notification.classList.add("show");
+
+                /* Hilangkan notif setelah 2 detik */
+                setTimeout(function () {
+                    notification.classList.remove("show");
+                }, 2000);
+
+            })
+            .catch(function () {
+
+                /* Fallback jika Clipboard API tidak tersedia */
+                const textarea = document.createElement("textarea");
+
+                textarea.value = text;
+                textarea.style.position = "fixed";
+                textarea.style.opacity = "0";
+
+                document.body.appendChild(textarea);
+
+                textarea.select();
+                document.execCommand("copy");
+
+                textarea.remove();
+
+                notification.classList.add("show");
+
+                setTimeout(function () {
+                    notification.classList.remove("show");
+                }, 2000);
+
+            });
+
+    });
+
+});
+</script>
+</body>
+</html>
+```
